@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+#
+# Display contents of various directories of the build dyno during the build.
+# This buildpack just delivers information, it doesn't do any transformations
+# on the application slug.
+#
+# ---
+#
+# The 'compile' script is executed by the slug compiler with three arguments:
+#   1. build_dir: location of your app directory on the build dyno
+#   2. cache_dir: directory on the build dyno that persists between builds
+#   3. env_dir:   directory holding all the app's config vars as files
+#
+# More information here: https://devcenter.heroku.com/articles/buildpack-api
+#
+# Daniel Weibel <daniel.weibel@unifr.ch> March 2015
+#------------------------------------------------------------------------------#
+
+set -e
+
+a() { sed 's/^/-----> /'; }
+i() { sed 's/^/       /'; }
+
+echo
+
+echo "Buildpack Info: shows information about the build process"      | a
+echo
+
+echo "Remember the general build sequence:"                           | a
+cat <<EOF                                                             | i
+--> 'git push heroku master'
+--> app dir is sent to build_dir on build dyno
+--> slug compiler starts running on build dyno
+--> slug compiler fetches buildpack and runs 'compile' script
+--> 'compile' script makes changes to app dir (build_dir)
+--> changed build_dir is now called the app's "slug"
+--> dynos are preloaded with the slug at /app and started
+EOF
+echo
+
+echo '$HOME dir (the slug compiler app dir)'                          | a
+echo '> echo $HOME'                                                   | i
+echo $HOME                                                            | i
+echo
+
+echo "Contents of the slug compiler app dir"                          | a
+echo '> ls -la $HOME'                                                 | i
+ls -la $HOME                                                          | i
+echo
+
+echo "Root of the build dyno"                                         | a
+echo "> ls -la /"                                                     | i
+ls -la /                                                              | i
+echo
+
+echo "The build_dir (arg 1) --> your app dir"                         | a
+echo '> echo $1'                                                      | i
+echo "$1"                                                             | i
+echo
+
+
+echo "The build_dir (arg 1) --> your app dir"                         | a
+cat <<EOF                                                             | i
+The 'compile' script is supposed to make transformations here
+(e.g. installing binaries). After that, this dir is called
+slug and loaded as /app onto the dynos running for the app.
+EOF
+echo '> ls -la $1'                                                    | i
+ls -la "$1"                                                           | i
+echo
+
+echo "Parent of the build_dir"                                        | a
+parent="${1%/*}"
+echo "> ls -la $parent"                                               | i
+ls -la "$parent"                                                      | i
+echo
+
+echo "The used buildpack"                                             | a
+echo "> ls -la" "$parent"/buildpack_*                                 | i
+ls -la "$parent"/buildpack_*                                          | i
+echo
+
+echo "The cache_dir (arg 2)"                                          | a
+echo '> echo $2'                                                      | i
+echo "$2"                                                             | i
+echo
+
+echo "The cache_dir"                                                  | a
+cat <<EOF                                                             | i
+This dir can be used by the 'compile' script to store data
+between successive builds. Note that this is exclusively
+for the buildpack, the app itself has no access to it.
+EOF
+echo '> ls -la $2'                                                    | i
+mkdir -p "$2"
+ls -la "$2"                                                           | i
+echo
+
+echo "The env_dir (arg 3)"                                            | a
+echo '> echo $3'                                                      | i
+echo "$3"                                                             | i
+echo
+
+echo "The env_dir (arg 3)"                                            | a
+cat <<EOF                                                             | i
+Contains one file for each of your app's config vars. This
+is read-only information for the 'compile' script.
+EOF
+echo '> ls -la $3'                                                    | i
+ls -la "$3"                                                           | i
+echo
+
+echo "Runtime stack of the app's dynos"                               | a
+echo '> echo $STACK'                                                  | i
+echo $STACK                                                           | i
+echo
+
+echo "Operating system of the $STACK stack"                           | a
+echo "> lsb_release -d"                                               | i
+lsb_release -d                                                        | i
+echo
