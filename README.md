@@ -1,19 +1,19 @@
 Heroku Buildpack: Info
 ======================
 
-Display information about the build process of a Heroku app, i.e. what happens when you do `git push heroku master`.
+Display information about the build process.
 
 
 Description
 -----------
 
-This buildpack doesn't do any transformations, it just displays various locations and their contents on the build dyno during the build of your app. It is useful to better understand the build process.
+This buildpack doesn't do any transformations, it just displays various locations and their contents on the build dyno during the build of your app. It is useful to better understand the build process, for example, for creating a custom buildpack.
 
 As a **summary**, when you do `git push heroku master`, then:
 
 - your app directory is sent to a **build dyno** where it is placed in a certain directory
-- the **slug compiler** running on the build dyno fetches the **buildpack** and executes the `detect`, `compile`, and `release` (if present) scripts
-- your app directory, along with any transformations made by the `compile` script, (i.e. the **"slug"**) is loaded as `/app` onto the production **dynos**, and the dynos are started
+- the **slug compiler** running on the build dyno fetches the **buildpack** set with `heroku buildpack:set <url>`, and executes the `detect`, `compile`, and `release` (if present) scripts
+- your app directory, along with any transformations made by the `compile` script, (now called **"slug"**) is loaded as `/app` onto the production **dynos**, and the dynos are started
 
 
 Usage
