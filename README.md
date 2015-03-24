@@ -12,7 +12,7 @@ This buildpack doesn't do any transformations, it just displays various location
 As a **summary**, when you do `git push heroku master`, then:
 
 - your app directory is sent to a **build dyno** where it is placed in a certain directory
-- the **slug compiler** running on the build dyno fetches the **buildpack** set with `heroku buildpack:set <url>`, and executes the `detect`, `compile`, and `release` (if present) scripts
+- the **slug compiler** running on the build dyno fetches the **buildpack**, set with `heroku buildpack:set <url>`, and executes its `detect`, `compile`, and `release` scripts
 - your app directory, along with any transformations made by the `compile` script, (now called **"slug"**) is loaded as `/app` onto the production **dynos**, and the dynos are started
 
 
