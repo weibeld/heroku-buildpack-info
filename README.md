@@ -38,7 +38,7 @@ https://devcenter.heroku.com/articles/using-multiple-buildpacks-for-an-app):
 
 ~~~bash
 heroku buildpacks:add --index 1 heroku/ruby
-heroku buildpacks:add --index 2 https://github.com/weibeld/heroku-buildpack-graphviz.git
+heroku buildpacks:add --index 2 https://github.com/weibeld/heroku-buildpack-info.git
 ~~~
 
 You can always check which buildpacks you have currently added to your app with:
